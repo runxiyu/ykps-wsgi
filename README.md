@@ -63,11 +63,7 @@ Description=ykps socket
 
 [Socket]
 ListenStream=/run/ykps.sock
-# Our service won't need permissions for the socket, since it
-# inherits the file descriptor by socket activation
-# only the nginx daemon will need access to the socket
 SocketUser=www-data
-# Optionally restrict the socket permissions even more.
 SocketMode=600
 
 [Install]
