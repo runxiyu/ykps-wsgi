@@ -92,3 +92,13 @@ server {
     listen 80;
 }
 ```
+
+The following `post-receive` hook may also be useful:
+```sh
+#!/bin/sh
+DSTDIR="/srv/ykps/ykps"
+sudo -u ykps git --work-tree=${DSTDIR} clean -fd
+sudo -u ykps git --work-tree=${DSTDIR} checkout --force
+```
+
+Remember to configure users, groups, and sudoers.
