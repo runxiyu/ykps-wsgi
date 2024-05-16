@@ -22,6 +22,10 @@ URL: https://git.runxiyu.org/ykps/current/ykps-wsgi.git"""
 def index():
     return render_template("index.html")
 
+@app.route('/version', methods=['GET'])
+def index():
+    return Response(__VERSION__, mimetype="text/plain")
+
 @app.route('/sjdb/', methods=['GET'])
 def sjdb_index():
     return render_template("sjdb-about.html")
