@@ -38,12 +38,8 @@ After=network.target
 
 [Service]
 Type=notify
-# the specific user that our service will run as
 User=ykps
 Group=nogroup
-# another option for an even more restricted service is
-# DynamicUser=yes
-# see http://0pointer.net/blog/dynamic-users-with-systemd.html
 RuntimeDirectory=ykps
 WorkingDirectory=/srv/ykps/ykps
 ExecStart=/usr/bin/gunicorn ykps:app
