@@ -4,7 +4,7 @@
 # production environment with something like gunicorn or uwsgi.
 #
 # SPDX-License-Identifier: AGPL-3.0-only
-# https://git.runxiyu.org/runxiyu/current/hybrid.git
+# https://git.runxiyu.org/ykps/current/ykps-wsgi.git
 #
 
 
