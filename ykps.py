@@ -23,11 +23,11 @@ def index():
     return render_template("index.html")
 
 @app.route('/sjdb/', methods=['GET'])
-def index():
+def sjdb_index():
     return render_template("sjdb-about.html")
 
 @app.route('/sjdb/ack', methods=['GET'])
-def index():
+def sjdb_ack():
     return render_template("sjdb-ack.html")
 
 if __name__ == "__main__":
