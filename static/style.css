@@ -21,7 +21,7 @@
 }
 */
 html {
-	font-family: sans-serif;
+	font-family: "Arial", sans-serif;
 }
 body {
 	max-width: 60rem;
@@ -93,7 +93,7 @@ pre {
 	padding: 10px 10px;
 }
 code, kbd, var {
-	font-family: "SF Mono", "Menlo", "Consolas", monospace;
+	font-family: monospace;
 	font-size: smaller;
 	background-color: rgb(240, 240, 240);
 }
@@ -152,4 +152,11 @@ hr {
 footer {
 	padding-top: 1rem;
 	text-align: center;
+}
+div.formgroup + div.formgroup {
+	margin-top: 1rem;
+}
+input[type=text], textarea {
+	font-family: monospace;
+	font-size: 90%;
 }

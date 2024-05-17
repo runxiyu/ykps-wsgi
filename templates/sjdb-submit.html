@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Submit &ndash; Daily Bulletin</title>
+	<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+	<header>
+		<h1>Submit to the Daily Bulletin</h1>
+	</header>
+	<article>
+		<p>You may submit a <i>Daily Inspiration</i> here.</p>
+		<ul>
+			<li>Request bodies must <strong>not</strong> be larger than {{max_request_size}} bytes. You may create larger submissions by uploading them to a hosting service (e.g. Microsoft SharePoint Online) and providing the URL.</li>
+			<li>Images should ideally be in the <a href="https://en.wikipedia.org/wiki/WebP">WebP</a> file format. <a href="https://en.wikipedia.org/wiki/ImageMagick">ImageMagick</a> may be used to convert images.</li>
+		</ul>
+	</article>
+	<form id="mainform" method="POST" enctype="multipart/form-data">
+		<div class="formgroup">
+			<label for="type"><strong>FIRSTLY</strong> please indicate the type of the submission:</label>
+			<br/>
+			<input type="radio" id="typetext" name="type" value="text" checked />
+			<label for="typetext">Text (Quote/Poem)</label>
+			<br/>
+			<input type="radio" id="typemedia" name="type" value="text" checked />
+			<label for="typemedia">Media (Image/Meme/Video)</label>
+			<br/>
+			<input type="radio" id="typecafe" name="type" value="text" checked />
+			<label for="typecafe">锐评食堂</label>
+		</div>
+		<div class="formgroup">
+			<label for="origin"><strong>AND</strong> state the source of your submission:</label>
+			<br/>
+			<textarea rows="5" cols="40" id="origin" name="origin" placeholder="Please provide a fully-qualified URL and state the known copyright condition if applicable."></textarea>
+		</div>
+		<div class="formgroup">
+			<label for="submitter"><strong>AND OPTIONALLY</strong> state your school email if you wish to be recognized:</label>
+			<br/>
+			<input type="text" id="submitter" name="submitter" maxlength="50" size="30" placeholder="s22537@ykpaoschool.cn" />
+		</div>
+		<div class="formgroup">
+			<label for="text"><strong>THEN EITHER</strong> provide your submission as text:</label>
+			<br/>
+			<textarea rows="10" cols="50" id="text" name="text" placeholder="Insert some text here"></textarea><br/>
+			(Your browser may allow you to expand the text area.)
+		</div>
+		<div class="formgroup">
+			<label for="fileupload"><strong>OR</strong> submit a file:</label>
+			<input type="file" id="fileupload" name="file" />
+		</div>
+		<div class="formgroup">
+			<label for="submit"><strong>LASTLY</strong> please press</label>
+			<input type="submit" value="Submit">
+		</div>
+	</form>
+	<footer>
+		<p><a href="./">Home Page</a> · <a href="./arc">Archive</a> · <a href="mailto:sjdb@runxiyu.org">Contact</a></p>
+	</footer>
+	<script>
+		// const form = document.forms["mainform;"]
+		const uploadField = document.getElementById("fileupload");
+		uploadField.onchange = function() {
+			if(this.files[0].size > {{max_file_size}}) {
+				alert("File exceeds {{max_file_size}} bytes. Either submit a smaller file or use a file hosting service.");
+				this.value = "";
+			}
+		};
+	</script>
+</body>
+</html>
+<!-- vim: linebreak wrap
+-->
