@@ -1,6 +1,6 @@
 # Practical Utilities for YK Pao School
 
-- Daily Bulletin
+- [Daily Bulletin](https://ykps.runxiyu.org/sjdb)
   - [Daily Bulletin Build System](https://git.runxiyu.org/ykps/current/sjdb-src.git)
     ([sr.ht mirror](https://git.sr.ht/~runxiyu/sjdb-src))
   - [Daily Bulletin Legacy](https://git.runxiyu.org/ykps/current/sjdb-legacy.git)
