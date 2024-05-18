@@ -42,7 +42,7 @@ def sjdb_submit():
 
 @app.route('/.well-known/microsoft-identity-association.json', methods=['GET'])
 def microsoft_identity_association():
-    return Response('{ "associatedApplications": [ { "applicationId": "14f8346d-98c9-4f12-875f-3b2cabe7110a" } ] }', mimetype="application/json")
+    return Response('{ "associatedApplications": [ { "applicationId": "fea760d5-b496-4f63-be1e-93855c1c5f78" } ] }', mimetype="application/json")
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
