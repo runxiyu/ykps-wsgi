@@ -40,5 +40,9 @@ def sjdb_ack():
 def sjdb_submit():
     return render_template("sjdb-submit.html", max_request_size = MAX_REQUEST_SIZE, max_file_size = MAX_FILE_SIZE)
 
+@app.route('/.well-known/microsoft-identity-association.json', methods=['GET'])
+def microsoft_identity_association():
+    return Response('{ "associatedApplications": [ { "applicationId": "692f45bd-db2d-41e9-ad6d-ac50793d0978" } ] }', mimetype="application/json")
+
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
