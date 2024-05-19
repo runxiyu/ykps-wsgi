@@ -3,6 +3,7 @@
 - [Utilities WSGI Site](https://ykps.runxiyu.org)
   ([repo](https://git.runxiyu.org/ykps/current/ykps-wsgi.git)/[sr.ht mirror](https://git.sr.ht/~runxiyu/ykps-wsgi))
   [this README comes from here]
+- [This site's Go rewrite](https://git.runxiyu.org/ykps/current/ykps-gohttp.git) ([sr.ht mirror](https://git.sr.ht/~runxiyu/ykps-gohttp))
 - [Daily Bulletin](https://ykps.runxiyu.org/sjdb)
   - [Daily Bulletin Build System](https://git.runxiyu.org/ykps/current/sjdb-src.git)
     ([sr.ht mirror](https://git.sr.ht/~runxiyu/sjdb-src))
