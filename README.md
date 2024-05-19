@@ -6,6 +6,8 @@
 - [Daily Bulletin](https://ykps.runxiyu.org/sjdb)
   - [Daily Bulletin Build System](https://git.runxiyu.org/ykps/current/sjdb-src.git)
     ([sr.ht mirror](https://git.sr.ht/~runxiyu/sjdb-src))
+  - [Daily Bulletin Built Files](https://git.runxiyu.org/ykps/current/sjdb-build.git)
+    ([sr.ht mirror](https://git.sr.ht/~runxiyu/sjdb-build))
   - [Daily Bulletin Legacy](https://git.runxiyu.org/ykps/current/sjdb-legacy.git)
     ([sr.ht mirror](https://git.sr.ht/~runxiyu/sjdb-legacy))
   - [Daily Bulletin Issue Tracker](https://todo.sr.ht/~runxiyu/sjdb)

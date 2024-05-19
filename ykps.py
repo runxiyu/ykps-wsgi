@@ -26,7 +26,7 @@ def index():
 
 @app.route('/version', methods=['GET'])
 def version():
-    return Response(__VERSION__, mimetype="text/plain")
+    return Response(VERSION, mimetype="text/plain")
 
 @app.route('/sjdb/', methods=['GET'])
 def sjdb_index():
