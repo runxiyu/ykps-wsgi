@@ -11,8 +11,11 @@
 		<h1>Submit to the Daily Bulletin</h1>
 	</header>
 	<article>
-		<p>You may submit a <i>Daily Inspiration</i> here.</p>
+		<p>
+		You may submit a <i>Daily Inspiration</i> here.
+		</p>
 		<ul>
+			<li>You are logged in as {{display_name}}. You may choose to <a href="{{ url_for('identity.logout') }}">log out</a>.</li>
 			<li>Request bodies must <strong>not</strong> be larger than {{max_request_size}} bytes. You may create larger submissions by uploading them to a hosting service (e.g. Microsoft SharePoint Online) and providing the URL.</li>
 			<li>Images should ideally be in the <a href="https://en.wikipedia.org/wiki/WebP">WebP</a> file format. <a href="https://en.wikipedia.org/wiki/ImageMagick">ImageMagick</a> may be used to convert images.</li>
 		</ul>
@@ -24,10 +27,10 @@
 			<input type="radio" id="typetext" name="type" value="text" checked />
 			<label for="typetext">Text (Quote/Poem)</label>
 			<br/>
-			<input type="radio" id="typemedia" name="type" value="text" checked />
+			<input type="radio" id="typemedia" name="type" value="text" />
 			<label for="typemedia">Media (Image/Meme/Video)</label>
 			<br/>
-			<input type="radio" id="typecafe" name="type" value="text" checked />
+			<input type="radio" id="typecafe" name="type" value="text" />
 			<label for="typecafe">锐评食堂</label>
 		</div>
 		<div class="formgroup">
@@ -41,7 +44,7 @@
 			<input type="radio" id="anonyes" name="anon" value="yes" checked />
 			<label for="anonyes">Submit anonymously</label>
 			<br/>
-			<input type="radio" id="anonno" name="anon" value="no" checked />
+			<input type="radio" id="anonno" name="anon" value="no" />
 			<label for="anonno">Submit as {{display_name}}</label>
 		</div>
 		<div class="formgroup">

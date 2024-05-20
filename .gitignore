@@ -1,2 +1,8 @@
 secrets.json
 __pycache__
+*.pem
+*.csr
+*.crt
+thumb.txt
+secret.txt
+flask_session
