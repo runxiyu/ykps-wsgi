@@ -30,6 +30,10 @@ def version():
 
 @app.route('/sjdb/', methods=['GET'])
 def sjdb_index():
+    return render_template("sjdb-index.html")
+
+@app.route('/sjdb/about', methods=['GET'])
+def sjdb_about():
     return render_template("sjdb-about.html")
 
 @app.route('/sjdb/acks', methods=['GET'])
