@@ -36,9 +36,13 @@
 			<textarea rows="5" cols="40" id="origin" name="origin" placeholder="Please provide a fully-qualified URL and state the known copyright condition if applicable."></textarea>
 		</div>
 		<div class="formgroup">
-			<label for="submitter"><strong>AND OPTIONALLY</strong> state your school email if you wish to be recognized:</label>
+			<label for="submitter"><strong>AND OPTIONALLY</strong>:</label>
 			<br/>
-			<input type="text" id="submitter" name="submitter" maxlength="50" size="30" placeholder="s22537@ykpaoschool.cn" />
+			<input type="radio" id="anonyes" name="anon" value="yes" checked />
+			<label for="anonyes">Submit anonymously</label>
+			<br/>
+			<input type="radio" id="anonno" name="anon" value="no" checked />
+			<label for="anonno">Submit as {{display_name}}</label>
 		</div>
 		<div class="formgroup">
 			<label for="text"><strong>THEN EITHER</strong> provide your submission as text:</label>
