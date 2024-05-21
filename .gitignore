@@ -6,3 +6,5 @@ __pycache__
 thumb.txt
 secret.txt
 flask_session
+uploads
+submissions

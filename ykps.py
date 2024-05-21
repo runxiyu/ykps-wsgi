@@ -16,6 +16,7 @@ import sys
 import traceback
 import pathlib
 import tempfile
+import shutil
 
 import flask
 import werkzeug
@@ -42,16 +43,19 @@ if ENV.upper() == "DEVELOPMENT":
     REDIRECT_URL = "http://localhost:8080/auth"
     with open("secret.txt", "r") as fd:
         CLIENT_SECRET = fd.read().strip("\n")
-    SAVE_PATH = "/tmp/uploads"
-    pathlib.Path(SAVE_PATH).mkdir(exist_ok=True)
+    UPLOAD_PATH = "uploads"
+    SUBMISSION_PATH = "submissions"
 else:
     REDIRECT_URL = "https://ykps.runxiyu.org/auth"
     with open("/srv/ykps/secret.txt", "r") as fd:
         CLIENT_SECRET = fd.read().strip("\n")
-    SAVE_PATH = "/srv/ykps/uploads"
+    UPLOAD_PATH = "/srv/ykps/uploads"
+    SUBMISSION_PATH = "/srv/ykps/submissions"
 
 
 class Teapot(Exception):
+    pass
+class RunxiError(Exception):
     pass
 
 
@@ -186,6 +190,8 @@ def sjdb_submit(context) -> response_t:
             )
         text = flask.request.form["text"]
         if "file" in flask.request.files and flask.request.files["file"].filename:
+            if shutil.disk_usage(UPLOAD_PATH).free < 5 * (1024**3):
+                raise RunxiError("Not enough disk space")
             file = flask.request.files["file"]
             if not file.filename:
                 raise TypeError(
@@ -196,7 +202,7 @@ def sjdb_submit(context) -> response_t:
                 mode="w+b",
                 suffix=fne,
                 prefix=fnr + ".",
-                dir=SAVE_PATH,
+                dir=UPLOAD_PATH,
                 delete=False,
                 delete_on_close=False,
             ) as fd:
