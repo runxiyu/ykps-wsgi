@@ -358,10 +358,7 @@ def sjdb_submit(context) -> response_t:
                     indent="\t",
                 )
         return flask.Response(
-            json.dumps(
-                data,
-                indent="\t",
-            ),
+            json.dumps(data, indent="\t"),
             mimetype="application/json",
             status=NOT_IMPLEMENTED,
         )
