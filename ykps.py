@@ -19,6 +19,7 @@ import traceback
 
 import flask
 import werkzeug
+import werkzeug.middleware.proxy_fix
 import identity.flask  # type: ignore
 
 response_t: typing.TypeAlias = typing.Union[werkzeug.Response, flask.Response, str]
@@ -58,6 +59,9 @@ else:
 
 
 app = flask.Flask(__name__)
+app.wsgi_app = werkzeug.middleware.proxy_fix.ProxyFix(
+    app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
+)
 app.config["MAX_CONTENT_LENGTH"] = MAX_REQUEST_SIZE
 app.config["SESSION_TYPE"] = "filesystem"
 
