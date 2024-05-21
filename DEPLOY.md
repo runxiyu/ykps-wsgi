@@ -94,3 +94,5 @@ sudo -u ykps git --work-tree=${DSTDIR} checkout --force
 Remember to configure users, groups, and sudoers.
 
 You also need to configure it with Azure secret keys and create relevant directories for submissions and files.
+
+Also remember to set the nginx max request size or something.
