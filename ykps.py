@@ -59,11 +59,36 @@ else:
 
 
 app = flask.Flask(__name__)
-app.wsgi_app = werkzeug.middleware.proxy_fix.ProxyFix(
+app.wsgi_app = werkzeug.middleware.proxy_fix.ProxyFix(  # type: ignore
     app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
 )
 app.config["MAX_CONTENT_LENGTH"] = MAX_REQUEST_SIZE
 app.config["SESSION_TYPE"] = "filesystem"
+
+
+@app.errorhandler(Exception)
+def handle_global_error(exc):
+    msg = "".join(traceback.format_exception(exc, chain=True))
+    return flask.Response(
+        flask.render_template(
+            "oops.html",
+            msg="This error is really unexpected in the sense that no specific error handlers were set up to display this:",
+            error=msg,
+        ),
+        status=500,
+    )
+
+
+@app.errorhandler(404)
+def handle_404(exc):
+    msg = "".join(traceback.format_exception(exc, chain=True))
+    return flask.Response(
+        flask.render_template(
+            "404.html",
+            e=msg,
+        ),
+        status=404,
+    )
 
 
 auth = identity.flask.Auth(
@@ -101,18 +126,8 @@ def uinfo(context) -> response_t:
 
 
 @app.route("/error", methods=["GET"])
-def error() -> response_t:
-    try:
-        raise Exception("THIS IS ONLY A TEST.")
-    except Exception:
-        return flask.Response(
-            flask.render_template(
-                "oops.html",
-                msg="THIS IS NOT A REAL ERROR. You found the endpoint that is used to test the error page. Please do NOT submit a bug report about this.",
-                error=traceback.format_exc(),
-            ),
-            status=500,
-        )
+def error_test() -> response_t:
+    raise Exception("THIS IS ONLY A TEST.")
 
 
 @app.route("/sjdb/", methods=["GET"])
@@ -154,12 +169,24 @@ def sjdb_submit(context) -> response_t:
         )
     elif flask.request.method == "POST":
         # NOTE: Do not place duplicate keys in the form! The conversion will only yield the first one.
-        jd = json.dumps(flask.request.form.to_dict())
+        type_ = flask.request.form["type"]
+        origin = flask.request.form["origin"]
+        anon = flask.request.form["anon"]
+        text = flask.request.form["text"]
+        if "file" in flask.request.files and flask.request.files["file"].filename:
+            file = flask.request.files["file"]
+        else:
+            file = None
+        jd = json.dumps(
+            {"type": type_, "origin": origin, "anon": anon, "text": text, "file": file}
+        )
         return flask.Response(jd, mimetype="text/plain", status=NOT_IMPLEMENTED)
         # return flask.render_template("sjdb-submit-post.html")
     else:
         return flask.Response(
-            "Error 418: I'm a teapot", mimetype="text/plain", status=418
+            "HTCPCP/1.0 418 I'm a teapot\nSee IETF RFC 2324 for details.",
+            mimetype="text/plain",
+            status=418,
         )
 
 
