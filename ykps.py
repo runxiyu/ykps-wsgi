@@ -67,15 +67,26 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 
 @app.errorhandler(Exception)
-def handle_global_error(exc):
-    msg = "".join(traceback.format_exception(exc, chain=True))
+def error(exc, msg="This error is really unexpected in the sense that no specific error handlers were set up to display this:"):
+    tb = "".join(traceback.format_exception(exc, chain=True))
     return flask.Response(
         flask.render_template(
             "oops.html",
-            msg="This error is really unexpected in the sense that no specific error handlers were set up to display this:",
-            error=msg,
+            msg=msg,
+            error=tb,
         ),
         status=500,
+    )
+
+def teapot(exc, msg="This interface was called with the teapot but no specific message was specified."):
+    tb = "".join(traceback.format_exception(exc, chain=True))
+    return flask.Response(
+        flask.render_template(
+            "teapot.html",
+            msg=msg,
+            error=tb,
+        ),
+        status=418,
     )
 
 
@@ -127,7 +138,14 @@ def uinfo(context) -> response_t:
 
 @app.route("/error", methods=["GET"])
 def error_test() -> response_t:
-    raise Exception("THIS IS ONLY A TEST.")
+    raise Exception("THIS IS ONLY A TEST FOR THE EXCEPTION HANDLER. THIS IS NOT A BUG.")
+
+@app.route("/teapot", methods=["GET"])
+def teapot_test() -> response_t:
+    try:
+        raise Exception("TEAPOTS!")
+    except Exception as e:
+        return teapot(e)
 
 
 @app.route("/sjdb/", methods=["GET"])
@@ -172,6 +190,8 @@ def sjdb_submit(context) -> response_t:
         type_ = flask.request.form["type"]
         origin = flask.request.form["origin"]
         anon = flask.request.form["anon"]
+        if anon not in ["axolotl", "yes", "no"]:
+            raise ValueError("anon", anon)
         text = flask.request.form["text"]
         if "file" in flask.request.files and flask.request.files["file"].filename:
             file = flask.request.files["file"]
@@ -182,12 +202,6 @@ def sjdb_submit(context) -> response_t:
         )
         return flask.Response(jd, mimetype="text/plain", status=NOT_IMPLEMENTED)
         # return flask.render_template("sjdb-submit-post.html")
-    else:
-        return flask.Response(
-            "HTCPCP/1.0 418 I'm a teapot\nSee IETF RFC 2324 for details.",
-            mimetype="text/plain",
-            status=418,
-        )
 
 
 if __name__ == "__main__":
