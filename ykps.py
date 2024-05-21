@@ -47,15 +47,19 @@ if ENV.upper() == "DEVELOPMENT":
         CLIENT_SECRET = fd.read().strip("\n")
     UPLOAD_PATH = "uploads"
     SUBMISSION_PATH = "submissions"
+    with open("tokens.txt", "r") as fd:
+        MY_TOKENS = [l.strip("\n") for l in fd if l]
 else:
     REDIRECT_URL = "https://ykps.runxiyu.org/auth"
     with open("/srv/ykps/secret.txt", "r") as fd:
         CLIENT_SECRET = fd.read().strip("\n")
     UPLOAD_PATH = "/srv/ykps/uploads"
     SUBMISSION_PATH = "/srv/ykps/submissions"
+    with open("/srv/ykps/tokens.txt", "r") as fd:
+        MY_TOKENS = [l.strip("\n") for l in fd if l]
 
 
-class Teapot(Exception):
+class nope(Exception):
     pass
 
 
@@ -85,18 +89,18 @@ def error(
     )
 
 
-@app.errorhandler(Teapot)
-def teapot(
-    exc: Teapot,
+@app.errorhandler(nope)
+def handle_nope(
+    exc: nope,
 ) -> response_t:
     tb = "".join(traceback.format_exception(exc, chain=True))
     return flask.Response(
         flask.render_template(
-            "teapot.html",
-            msg=exc.args[0],
+            "nope.html",
+            msg=exc.args[1],
             error=tb,
         ),
-        status=418,
+        status=exc.args[0],
     )
 
 
@@ -117,7 +121,7 @@ def handle_413(exc: BaseException) -> response_t:
     tb = "".join(traceback.format_exception(exc, chain=True))
     return flask.Response(
         flask.render_template(
-            "teapot.html",
+            "nope.html",
             msg="The request is too large! I can only handle up to %d bytes."
             % MAX_REQUEST_SIZE,
             error=tb,
@@ -165,9 +169,9 @@ def error_test() -> response_t:
     raise Exception("THIS IS ONLY A TEST FOR THE EXCEPTION HANDLER. THIS IS NOT A BUG.")
 
 
-@app.route("/teapot", methods=["GET"])
-def teapot_test() -> response_t:
-    raise Teapot("TEAPOTS!")
+@app.route("/nope", methods=["GET"])
+def nope_test() -> response_t:
+    raise nope(418, "Haha!")
 
 
 @app.route("/sjdb/", methods=["GET"])
@@ -187,16 +191,27 @@ def sjdb_ack() -> response_t:
 
 @app.route("/sjdb/rf/<fn>", methods=["GET"])
 def sjdb_rf(fn: str) -> response_t:
+    # This endpoint is protected via basic token authentication because of the
+    # potential for this to be used to distribute malware
+    auth = flask.request.authorization
+    if not auth or auth.type != "bearer" or (auth.token not in MY_TOKENS):
+        raise nope(403, "You can't read uploaded files without proper authentication for security reasons")
     return flask.send_from_directory(UPLOAD_PATH, fn, as_attachment=True)
 
 
 @app.route("/sjdb/rs/<fn>", methods=["GET"])
 def sjdb_rs_file(fn: str) -> response_t:
+    auth = flask.request.authorization
+    if not auth or auth.type != "bearer" or (auth.token not in MY_TOKENS):
+        raise nope(403, "You can't read submissions without proper authentication for security reasons")
     return flask.send_from_directory(SUBMISSION_PATH, fn)
 
 
 @app.route("/sjdb/rs", methods=["GET"])
 def sjdb_rs_dir() -> response_t:
+    auth = flask.request.authorization
+    if not auth or auth.type != "bearer" or (auth.token not in MY_TOKENS):
+        raise nope(403, "You can't list submissions without proper authentication for security reasons")
     return flask.Response(
         json.dumps(os.listdir(SUBMISSION_PATH), indent="\t"),
         mimetype="application/json",
@@ -222,7 +237,8 @@ def sjdb_submit(context) -> response_t:
             anon = flask.request.form["anon"]
             text = flask.request.form["text"]
         except KeyError as e:
-            raise Teapot(
+            raise nope(
+                400,
                 'Your request does not contain the required field "%s"' % e.args[0]
             )
         if anon == "yes":
@@ -232,7 +248,8 @@ def sjdb_submit(context) -> response_t:
         elif anon == "axolotl":
             uname = "an axolotl"
         else:
-            raise Teapot(
+            raise nope(
+                400,
                 '"%s" is not an acceptable value for the "anon" field in the submit form. It should be "yes", "no", or "axolotl".'
                 % anon
             )
@@ -270,7 +287,7 @@ def sjdb_submit(context) -> response_t:
             file = None
             fn = None
         if not (text.strip() or fn):
-            raise Teapot("Your submission request is basically empty.")
+            raise nope(400, "Your submission request is basically empty.")
         if sys.version_info >= (3, 12):
             with tempfile.NamedTemporaryFile(
                 mode="w+",
