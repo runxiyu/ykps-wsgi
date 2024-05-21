@@ -16,9 +16,10 @@
 		</p>
 		<ul>
 			<li>You are logged in as {{display_name}}. You may choose to <a href="{{ url_for('identity.logout') }}">log out</a>.</li>
-			<li>Request bodies must <strong>not</strong> be larger than {{max_request_size}} bytes. You may create larger submissions by uploading them to a hosting service (e.g. Microsoft SharePoint Online) and providing the URL.</li>
+			<li>Request bodies <strong>must not</strong> be larger than {{max_request_size}} bytes. Files <strong>should not</strong> be larger than {{max_file_size}} bytes (enforced client-side only). You may create larger submissions by uploading them to a hosting service (e.g. Microsoft SharePoint Online) and providing the URL.</li>
 			<li>Images should ideally be in the <a href="https://en.wikipedia.org/wiki/WebP">WebP</a> file format. <a href="https://en.wikipedia.org/wiki/ImageMagick">ImageMagick</a> may be used to convert images.</li>
 			<li><details><summary>Why don't we use Microsoft Forms?</summary>Because it sucks: <ul><li>It requires a lot of <a href="https://www.gnu.org/philosophy/javascript-trap.en.html">nonfree JavaScript</a> to work &ndash; more than what's required for a user to log in.</li><li>It does not support the Microsoft Graph API commonly used to access data from Microsoft services.</li><li>The only way to automatically access data from Microsoft Forms is by using <a href="https://powerautomate.com">Microsoft Power Automate</a> which seems extremely cumbersome to use from the perspective of a developer (and requires some "premium" license to call external HTTP(S) APIs so I'd have to use some hacky email sending and email interpretation or some sort of SharePoint list shared state for inter-service communication). I just don't want to mess with that, and building an entire site that's an alternative to Microsoft Forms seems to be easier</li></ul></details></li>
+			<li><details><summary>How is JavaScript used on this page?</summary>This page itself only has one internal script that checks your file uploads and rejects them if they're larger than {{max_file_size}} bytes. However, when accessing this page, unauthenticated users will be redirected to the Microsoft Active Directory authentication page which contains some nonfree JavaScript.</details></li>
 		</ul>
 	</article>
 	<form id="mainform" method="POST" enctype="multipart/form-data">
@@ -70,7 +71,7 @@
 		<p><a href="./">Home Page</a> · <a href="./arc">Archive</a> · <a href="mailto:sjdb@runxiyu.org">Contact</a></p>
 	</footer>
 	<script>
-		// const form = document.forms["mainform;"]
+		/* SPDX-License-Identifier: CC0-1.0 */
 		const uploadField = document.getElementById("fileupload");
 		uploadField.onchange = function() {
 			if(this.files[0].size > {{max_file_size}}) {
