@@ -200,16 +200,27 @@ def sjdb_submit(context) -> response_t:
                     "I didn't think it's possible for the filename to suddenly become None again!!!"
                 )
             fnr, fne = os.path.splitext(os.path.basename(file.filename))
-            with tempfile.NamedTemporaryFile(
-                mode="w+b",
-                suffix=fne,
-                prefix=fnr + ".",
-                dir=UPLOAD_PATH,
-                delete=False,
-                delete_on_close=False,
-            ) as fd:
-                fn = fd.name
-                file.save(fd)
+            if sys.version_info >= (3, 12):
+                with tempfile.NamedTemporaryFile(
+                    mode="w+b",
+                    suffix=fne,
+                    prefix=fnr + ".",
+                    dir=UPLOAD_PATH,
+                    delete=False,
+                    delete_on_close=False,
+                ) as fd:
+                    fn = fd.name
+                    file.save(fd)
+            else:
+                with tempfile.NamedTemporaryFile(
+                    mode="w+b",
+                    suffix=fne,
+                    prefix=fnr + ".",
+                    dir=UPLOAD_PATH,
+                    delete=False,
+                ) as fd:
+                    fn = fd.name
+                    file.save(fd)
         else:
             file = None
             fn = None
