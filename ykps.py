@@ -171,6 +171,16 @@ def sjdb_ack() -> response_t:
     return flask.render_template("sjdb-acks.html")
 
 
+@app.route("/sjdb/rf/<fn>", methods=["GET"])
+def sjdb_rf(fn: str) -> response_t:
+    return flask.send_from_directory(UPLOAD_PATH, fn, as_attachment=True)
+
+
+@app.route("/sjdb/rs/<fn>", methods=["GET"])
+def sjdb_rs(fn: str) -> response_t:
+    return flask.send_from_directory(SUBMISSION_PATH, fn)
+
+
 @app.route("/sjdb/submit", methods=["GET", "POST"])
 @auth.login_required  # type: ignore
 def sjdb_submit(context) -> response_t:
@@ -232,7 +242,9 @@ def sjdb_submit(context) -> response_t:
             with tempfile.NamedTemporaryFile(
                 mode="w+",
                 suffix=".json",
-                prefix=datetime.datetime.now(tz=zoneinfo.ZoneInfo("UTC")).strftime("%s."),
+                prefix=datetime.datetime.now(tz=zoneinfo.ZoneInfo("UTC")).strftime(
+                    "%s."
+                ),
                 dir=SUBMISSION_PATH,
                 delete=False,
                 delete_on_close=False,
@@ -240,7 +252,14 @@ def sjdb_submit(context) -> response_t:
             ) as fdj:
                 fdjn = fdj.name
                 json.dump(
-                    {"type": type_, "origin": origin, "anon": anon, "text": text, "file": fn, "sub": fdj.name},
+                    {
+                        "type": type_,
+                        "origin": origin,
+                        "anon": anon,
+                        "text": text,
+                        "file": fn,
+                        "sub": fdjn,
+                    },
                     fdj,
                     indent="\t",
                 )
@@ -248,19 +267,41 @@ def sjdb_submit(context) -> response_t:
             with tempfile.NamedTemporaryFile(
                 mode="w+",
                 suffix=".json",
-                prefix=datetime.datetime.now(tz=zoneinfo.ZoneInfo("UTC")).strftime("%s."),
+                prefix=datetime.datetime.now(tz=zoneinfo.ZoneInfo("UTC")).strftime(
+                    "%s."
+                ),
                 dir=SUBMISSION_PATH,
                 delete=False,
                 encoding="utf-8",
             ) as fdj:
                 fdjn = fdj.name
                 json.dump(
-                    {"type": type_, "origin": origin, "anon": anon, "text": text, "file": fn, "sub": fdjn},
+                    {
+                        "type": type_,
+                        "origin": origin,
+                        "anon": anon,
+                        "text": text,
+                        "file": fn,
+                        "sub": fdjn,
+                    },
                     fdj,
                     indent="\t",
                 )
-        return flask.Response(json.dumps({"type": type_, "origin": origin, "anon": anon, "text": text, "file": fn, "sub": fdjn}), mimetype="application/json", status=NOT_IMPLEMENTED)
-                    
+        return flask.Response(
+            json.dumps(
+                {
+                    "type": type_,
+                    "origin": origin,
+                    "anon": anon,
+                    "text": text,
+                    "file": fn,
+                    "sub": fdjn,
+                }
+            ),
+            mimetype="application/json",
+            status=NOT_IMPLEMENTED,
+        )
+
         # return flask.render_template("sjdb-submit-post.html")
 
 
