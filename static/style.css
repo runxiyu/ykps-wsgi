@@ -65,7 +65,7 @@ tr.not-today {
 }
 td, th {
 	border: 1px solid rgb(150, 150, 150);
-	padding: 0.4rem 0.4rem;
+	padding: 0.3rem;
 }
 td {
 	text-align: center;
@@ -90,12 +90,12 @@ blockquote:before {
 }
 pre {
 	background-color: rgb(240, 240, 240);
-	padding: 10px 10px;
+	padding: 0.3rem;
 	overflow-x: scroll;
 }
 textarea {
 	width: 100%;
-	padding: 10px 10px;
+	padding: 0.3rem;
 	box-sizing: border-box;
 	border: 0 solid rgba(0, 0, 0, 0);
 	background-color: rgb(240, 240, 240);
