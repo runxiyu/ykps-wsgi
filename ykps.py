@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+#
 # Although the above shebang line exists, you should probably run it in a
 # production environment with something like gunicorn or uwsgi.
 #
@@ -14,8 +14,6 @@ import os
 import json
 import sys
 import traceback
-
-# import configparser
 
 import flask
 import werkzeug
@@ -57,6 +55,8 @@ else:
 # with open("server.pem", "r") as fd:
 #     PRIVATE_KEY = fd.read()
 
+class Teapot(Exception): pass
+
 
 app = flask.Flask(__name__)
 app.wsgi_app = werkzeug.middleware.proxy_fix.ProxyFix(  # type: ignore
@@ -69,28 +69,26 @@ app.config["SESSION_TYPE"] = "filesystem"
 @app.errorhandler(Exception)
 def error(
     exc: BaseException,
-    msg: str = "This error is really unexpected in the sense that no specific error handlers were set up to display this:",
 ) -> response_t:
     tb = "".join(traceback.format_exception(exc, chain=True))
     return flask.Response(
         flask.render_template(
             "oops.html",
-            msg=msg,
             error=tb,
         ),
         status=500,
     )
 
 
+@app.errorhandler(Teapot)
 def teapot(
-    exc: BaseException,
-    msg: str = "This interface was called with the teapot but no specific message was specified.",
+    exc: Teapot,
 ) -> response_t:
     tb = "".join(traceback.format_exception(exc, chain=True))
     return flask.Response(
         flask.render_template(
             "teapot.html",
-            msg=msg,
+            msg=exc.args[0],
             error=tb,
         ),
         status=418,
@@ -103,7 +101,7 @@ def handle_404(exc: BaseException) -> response_t:
     return flask.Response(
         flask.render_template(
             "404.html",
-            e=msg,
+            err=msg,
         ),
         status=404,
     )
@@ -150,11 +148,7 @@ def error_test() -> response_t:
 
 @app.route("/teapot", methods=["GET"])
 def teapot_test() -> response_t:
-    try:
-        raise Exception("TEAPOTS!")
-    except Exception as e:
-        return teapot(e)
-
+    raise Teapot("TEAPOTS!")
 
 @app.route("/sjdb/", methods=["GET"])
 def sjdb_index() -> response_t:
@@ -174,18 +168,7 @@ def sjdb_ack() -> response_t:
 @app.route("/sjdb/submit", methods=["GET", "POST"])
 @auth.login_required  # type: ignore
 def sjdb_submit(context) -> response_t:
-    try:
-        display_name = context["user"]["name"]
-    except KeyError:
-        return flask.Response(
-            flask.render_template(
-                "oops.html",
-                subproject="sjdb",
-                msg="I cannot obtain your display name. There might be an issue while you were logging in.",
-                error=traceback.format_exc(),
-            ),
-            status=500,
-        )
+    display_name = context["user"]["name"]
     if flask.request.method == "GET":
         return flask.render_template(
             "sjdb-submit.html",
@@ -198,8 +181,8 @@ def sjdb_submit(context) -> response_t:
         type_ = flask.request.form["type"]
         origin = flask.request.form["origin"]
         anon = flask.request.form["anon"]
-        if anon not in ["axolotl", "yes", "no"]:
-            raise ValueError("anon", anon)
+        if anon not in ["yes", "no", "axolotl"] or True:
+            raise Teapot('"%s" is not an acceptable value for the "anon" field in the submit form. It should be "yes", "no", or "axolotl".' % anon)
         text = flask.request.form["text"]
         if "file" in flask.request.files and flask.request.files["file"].filename:
             file = flask.request.files["file"]

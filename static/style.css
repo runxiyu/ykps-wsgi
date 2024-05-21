@@ -91,6 +91,13 @@ blockquote:before {
 pre {
 	background-color: rgb(240, 240, 240);
 	padding: 10px 10px;
+	overflow-x: scroll;
+}
+pre#err {
+	background-color: rgb(255, 220, 220);
+}
+p#teapotmsg {
+	font-weight: bold;
 }
 code, kbd, var {
 	font-family: monospace;
