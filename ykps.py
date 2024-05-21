@@ -177,8 +177,15 @@ def sjdb_rf(fn: str) -> response_t:
 
 
 @app.route("/sjdb/rs/<fn>", methods=["GET"])
-def sjdb_rs(fn: str) -> response_t:
+def sjdb_rs_file(fn: str) -> response_t:
     return flask.send_from_directory(SUBMISSION_PATH, fn)
+
+
+@app.route("/sjdb/rs", methods=["GET"])
+def sjdb_rs_dir() -> response_t:
+    return flask.Response(
+        json.dumps(os.listdir(SUBMISSION_PATH), indent="\t"), mimetype="application/json"
+    )
 
 
 @app.route("/sjdb/submit", methods=["GET", "POST"])
@@ -296,7 +303,8 @@ def sjdb_submit(context) -> response_t:
                     "text": text,
                     "file": fn,
                     "sub": fdjn,
-                }
+                },
+                indent="\t"
             ),
             mimetype="application/json",
             status=NOT_IMPLEMENTED,
