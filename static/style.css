@@ -43,7 +43,7 @@ span.location {
 time {
 	text-decoration: underline;
 }
-a:link, a:visited, a:hover, a:active {
+a:link:not(.button), a:visited:not(.button), a:hover:not(.button), a:active:not(.button) {
 	color: rgb(20, 120, 20);
 }
 table {
@@ -93,16 +93,24 @@ pre {
 	padding: 10px 10px;
 	overflow-x: scroll;
 }
-pre#err {
-	background-color: rgb(255, 220, 220);
+textarea {
+	width: 100%;
+	padding: 10px 10px;
+	box-sizing: border-box;
+	border: 0 solid rgba(0, 0, 0, 0);
+	background-color: rgb(240, 240, 240);
+	resize: vertical;
+}
+textarea, input[type=text], code, kbd, var {
+	font-family: monospace;
+	font-size: smaller;
+	background-color: rgb(240, 240, 240);
 }
 p#teapotmsg {
 	font-weight: bold;
 }
-code, kbd, var {
-	font-family: monospace;
-	font-size: smaller;
-	background-color: rgb(240, 240, 240);
+pre#err {
+	background-color: rgb(255, 220, 220);
 }
 cite {
 	font-size: 90%;
@@ -163,7 +171,17 @@ footer {
 div.formgroup + div.formgroup {
 	margin-top: 1rem;
 }
-input[type=text], textarea {
-	font-family: monospace;
-	font-size: 90%;
+button, .button, input[type=submit], input[type=file]::file-selector-button {
+	/* background-color: rgb(200, 250, 200); */
+	background-color: rgb(20, 120, 20);
+	color: white;
+	border: none;
+	padding: 5px 5px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	cursor: pointer;
+	font-family: Arial;
 }
+
+
