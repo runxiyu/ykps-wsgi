@@ -184,7 +184,8 @@ def sjdb_rs_file(fn: str) -> response_t:
 @app.route("/sjdb/rs", methods=["GET"])
 def sjdb_rs_dir() -> response_t:
     return flask.Response(
-        json.dumps(os.listdir(SUBMISSION_PATH), indent="\t"), mimetype="application/json"
+        json.dumps(os.listdir(SUBMISSION_PATH), indent="\t"),
+        mimetype="application/json",
     )
 
 
@@ -204,7 +205,13 @@ def sjdb_submit(context) -> response_t:
         type_ = flask.request.form["type"]
         origin = flask.request.form["origin"]
         anon = flask.request.form["anon"]
-        if anon not in ["yes", "no", "axolotl"]:
+        if anon == "yes":
+            uname = display_name
+        elif anon == "no":
+            uname = None
+        elif anon == "axolotl":
+            uname = "an axolotl"
+        else:
             raise Teapot(
                 '"%s" is not an acceptable value for the "anon" field in the submit form. It should be "yes", "no", or "axolotl".'
                 % anon
@@ -258,15 +265,17 @@ def sjdb_submit(context) -> response_t:
                 encoding="utf-8",
             ) as fdj:
                 fdjn = fdj.name
+                data = {
+                    "type": type_,
+                    "origin": origin,
+                    "anon": anon,
+                    "uname": uname,
+                    "text": text,
+                    "file": fn,
+                    "sub": fdjn,
+                }
                 json.dump(
-                    {
-                        "type": type_,
-                        "origin": origin,
-                        "anon": anon,
-                        "text": text,
-                        "file": fn,
-                        "sub": fdjn,
-                    },
+                    data,
                     fdj,
                     indent="\t",
                 )
@@ -282,35 +291,28 @@ def sjdb_submit(context) -> response_t:
                 encoding="utf-8",
             ) as fdj:
                 fdjn = fdj.name
+                data = {
+                    "type": type_,
+                    "origin": origin,
+                    "anon": anon,
+                    "uname": uname,
+                    "text": text,
+                    "file": fn,
+                    "sub": fdjn,
+                }
                 json.dump(
-                    {
-                        "type": type_,
-                        "origin": origin,
-                        "anon": anon,
-                        "text": text,
-                        "file": fn,
-                        "sub": fdjn,
-                    },
+                    data,
                     fdj,
                     indent="\t",
                 )
         return flask.Response(
             json.dumps(
-                {
-                    "type": type_,
-                    "origin": origin,
-                    "anon": anon,
-                    "text": text,
-                    "file": fn,
-                    "sub": fdjn,
-                },
-                indent="\t"
+                data,
+                indent="\t",
             ),
             mimetype="application/json",
             status=NOT_IMPLEMENTED,
         )
-
-        # return flask.render_template("sjdb-submit-post.html")
 
 
 if __name__ == "__main__":
