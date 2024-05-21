@@ -36,7 +36,7 @@ ENV = os.environ.get("ENV", "PRODUCTION")
 AUTHORITY = "https://login.microsoftonline.com/ddd3d26c-b197-4d00-a32d-1ffd84c0c295"
 CLIENT_ID = "651eef7e-8670-4b68-b7ed-d2d7885187e4"
 SCOPE = ["https://graph.microsoft.com/.default"]
-if ENV == "DEVELOPMENT":
+if ENV.upper() == "DEVELOPMENT":
     REDIRECT_URL = "http://localhost:8080/auth"
 else:
     REDIRECT_URL = "https://ykps.runxiyu.org/auth"
