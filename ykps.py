@@ -40,7 +40,7 @@ SCOPE = ["https://graph.microsoft.com/.default"]
 if ENV == "DEVELOPMENT":
     REDIRECT_URL = "http://localhost:8080/auth"
 else:
-    REDIRECT_URL = "htts://ykps.runxiyu.org/auth"
+    REDIRECT_URL = "https://ykps.runxiyu.org/auth"
 
 for fn in ["/srv/ykps/secret.txt", "secret.txt"]:
     try:
