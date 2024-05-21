@@ -205,7 +205,7 @@ def sjdb_rs_dir() -> response_t:
 
 @app.route("/sjdb/submit", methods=["GET", "POST"])
 @auth.login_required  # type: ignore
-def sjdb_submit() -> response_t:
+def sjdb_submit(context) -> response_t:
     display_name = context["user"]["name"]
     if flask.request.method == "GET":
         return flask.render_template(
