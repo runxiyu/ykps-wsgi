@@ -21,7 +21,7 @@
 }
 */
 html {
-	font-family: "Arial", sans-serif;
+	font-family: "DejaVu Sans", "Cantarell", "-apple-system", "Calibre", "Arial", system-ui, sans-serif;
 }
 body {
 	max-width: 60rem;
@@ -102,7 +102,7 @@ textarea {
 	resize: vertical;
 }
 textarea, input[type=text], code, kbd, var {
-	font-family: monospace;
+	font-family: "DejaVu Sans Mono", monospace;
 	font-size: smaller;
 	background-color: rgb(240, 240, 240);
 }
@@ -125,7 +125,7 @@ p.ps {
 	color: rgb(150, 150, 150);
 }
 .serif, math {
-	font-family: serif;
+	font-family: "TeX Gyre Schola", "New Century Schoolbook", "Century Schoolbook", "Century", serif;
 }
 img {
 	max-width: 100%;
@@ -181,7 +181,7 @@ button, .button, input[type=submit], input[type=file]::file-selector-button {
 	text-decoration: none;
 	display: inline-block;
 	cursor: pointer;
-	font-family: Arial;
+	font-family: inherit;
 }
 
 
