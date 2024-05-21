@@ -32,11 +32,15 @@ VERSION = """ykps-wsgi v0.1
 License: GNU Affero General Public License v3.0 only
 URLs: https://git.runxiyu.org/ykps/current/ykps-wsgi.git
       https://git.sr.ht/~runxiyu/ykps-wsgi.git"""
+ENV = os.environ.get("ENV", "PRODUCTION")
 
 AUTHORITY = "https://login.microsoftonline.com/ddd3d26c-b197-4d00-a32d-1ffd84c0c295"
 CLIENT_ID = "651eef7e-8670-4b68-b7ed-d2d7885187e4"
 SCOPE = ["https://graph.microsoft.com/.default"]
-REDIRECT_URL = "http://localhost:8080/auth"
+if ENV == "DEVELOPMENT":
+    REDIRECT_URL = "http://localhost:8080/auth"
+else:
+    REDIRECT_URL = "htts://ykps.runxiyu.org/auth"
 
 for fn in ["/srv/ykps/secret.txt", "secret.txt"]:
     try:
@@ -51,6 +55,7 @@ else:
 #     THUMBPRINT = fd.read().strip("\n")
 # with open("server.pem", "r") as fd:
 #     PRIVATE_KEY = fd.read()
+
 
 app = flask.Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_REQUEST_SIZE
