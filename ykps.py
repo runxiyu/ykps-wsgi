@@ -112,6 +112,20 @@ def handle_404(exc: BaseException) -> response_t:
     )
 
 
+@app.errorhandler(413)
+def handle_413(exc: BaseException) -> response_t:
+    tb = "".join(traceback.format_exception(exc, chain=True))
+    return flask.Response(
+        flask.render_template(
+            "teapot.html",
+            msg="The request is too large! I can only handle up to %d bytes."
+            % MAX_REQUEST_SIZE,
+            error=tb,
+        ),
+        status=418,
+    )
+
+
 auth = identity.flask.Auth(
     app,
     CLIENT_ID,
@@ -190,8 +204,9 @@ def sjdb_rs_dir() -> response_t:
 
 
 @app.route("/sjdb/submit", methods=["GET", "POST"])
-@auth.login_required  # type: ignore
-def sjdb_submit(context) -> response_t:
+# @auth.login_required  # type: ignore
+def sjdb_submit() -> response_t:
+    context = {"user": {"name": "test"}}
     display_name = context["user"]["name"]
     if flask.request.method == "GET":
         return flask.render_template(
@@ -202,9 +217,15 @@ def sjdb_submit(context) -> response_t:
         )
     elif flask.request.method == "POST":
         # NOTE: Do not place duplicate keys in the form! The conversion will only yield the first one.
-        type_ = flask.request.form["type"]
-        origin = flask.request.form["origin"]
-        anon = flask.request.form["anon"]
+        try:
+            type_ = flask.request.form["type"]
+            origin = flask.request.form["origin"]
+            anon = flask.request.form["anon"]
+            text = flask.request.form["text"]
+        except KeyError as e:
+            raise Teapot(
+                'Your request does not contain the required field "%s"' % e.args[0]
+            )
         if anon == "yes":
             uname = display_name
         elif anon == "no":
@@ -216,7 +237,6 @@ def sjdb_submit(context) -> response_t:
                 '"%s" is not an acceptable value for the "anon" field in the submit form. It should be "yes", "no", or "axolotl".'
                 % anon
             )
-        text = flask.request.form["text"]
         if "file" in flask.request.files and flask.request.files["file"].filename:
             if shutil.disk_usage(UPLOAD_PATH).free < 5 * (1024**3):
                 raise RunxiError("Not enough disk space")
