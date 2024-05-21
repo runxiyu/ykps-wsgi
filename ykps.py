@@ -17,6 +17,8 @@ import traceback
 import pathlib
 import tempfile
 import shutil
+import datetime
+import zoneinfo
 
 import flask
 import werkzeug
@@ -208,9 +210,9 @@ def sjdb_submit(context) -> response_t:
                     dir=UPLOAD_PATH,
                     delete=False,
                     delete_on_close=False,
-                ) as fd:
-                    fn = fd.name
-                    file.save(fd)
+                ) as fdf:
+                    fn = fdf.name
+                    file.save(fdf)
             else:
                 with tempfile.NamedTemporaryFile(
                     mode="w+b",
@@ -218,19 +220,47 @@ def sjdb_submit(context) -> response_t:
                     prefix=fnr + ".",
                     dir=UPLOAD_PATH,
                     delete=False,
-                ) as fd:
-                    fn = fd.name
-                    file.save(fd)
+                ) as fdf:
+                    fn = fdf.name
+                    file.save(fdf)
         else:
             file = None
             fn = None
         if not (text.strip() or fn):
             raise Teapot("Your submission request is basically empty.")
-        jd = json.dumps(
-            {"type": type_, "origin": origin, "anon": anon, "text": text, "file": fn},
-            indent="\t",
-        )
-        return flask.Response(jd, mimetype="application/json", status=NOT_IMPLEMENTED)
+        if sys.version_info >= (3, 12):
+            with tempfile.NamedTemporaryFile(
+                mode="w+",
+                suffix=".json",
+                prefix=datetime.datetime.now(tz=zoneinfo.ZoneInfo("UTC")).strftime("%s."),
+                dir=SUBMISSION_PATH,
+                delete=False,
+                delete_on_close=False,
+                encoding="utf-8",
+            ) as fdj:
+                fdjn = fdj.name
+                json.dump(
+                    {"type": type_, "origin": origin, "anon": anon, "text": text, "file": fn, "sub": fdj.name},
+                    fdj,
+                    indent="\t",
+                )
+        else:
+            with tempfile.NamedTemporaryFile(
+                mode="w+",
+                suffix=".json",
+                prefix=datetime.datetime.now(tz=zoneinfo.ZoneInfo("UTC")).strftime("%s."),
+                dir=SUBMISSION_PATH,
+                delete=False,
+                encoding="utf-8",
+            ) as fdj:
+                fdjn = fdj.name
+                json.dump(
+                    {"type": type_, "origin": origin, "anon": anon, "text": text, "file": fn, "sub": fdjn},
+                    fdj,
+                    indent="\t",
+                )
+        return flask.Response(json.dumps({"type": type_, "origin": origin, "anon": anon, "text": text, "file": fn, "sub": fdjn}), mimetype="application/json", status=NOT_IMPLEMENTED)
+                    
         # return flask.render_template("sjdb-submit-post.html")
 
 
