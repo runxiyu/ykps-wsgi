@@ -55,6 +55,8 @@ else:
 
 class Teapot(Exception):
     pass
+
+
 class RunxiError(Exception):
     pass
 
@@ -211,6 +213,8 @@ def sjdb_submit(context) -> response_t:
         else:
             file = None
             fn = None
+        if not (text.strip() or fn):
+            raise Teapot("Your submission request is basically empty.")
         jd = json.dumps(
             {"type": type_, "origin": origin, "anon": anon, "text": text, "file": fn},
             indent="\t",
