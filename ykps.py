@@ -191,27 +191,46 @@ def sjdb_ack() -> response_t:
 
 @app.route("/sjdb/rf/<fn>", methods=["GET"])
 def sjdb_rf(fn: str) -> response_t:
-    # This endpoint is protected via basic token authentication because of the
-    # potential for this to be used to distribute malware
-    auth = flask.request.authorization
-    if not auth or auth.type != "bearer" or (auth.token not in MY_TOKENS):
-        raise nope(403, "You can't read uploaded files without proper authentication for security reasons")
+    try:
+        auth = flask.request.headers["Authorization"]
+        assert (
+            auth and auth.startswith("Bearer ") and auth[len("Bearer ") :] in MY_TOKENS
+        )
+    except (KeyError, AssertionError):
+        raise nope(
+            401,
+            "You can't read uploaded files without proper authentication for security reasons",
+        )
     return flask.send_from_directory(UPLOAD_PATH, fn, as_attachment=True)
 
 
 @app.route("/sjdb/rs/<fn>", methods=["GET"])
 def sjdb_rs_file(fn: str) -> response_t:
-    auth = flask.request.authorization
-    if not auth or auth.type != "bearer" or (auth.token not in MY_TOKENS):
-        raise nope(403, "You can't read submissions without proper authentication for security reasons")
+    try:
+        auth = flask.request.headers["Authorization"]
+        assert (
+            auth and auth.startswith("Bearer ") and auth[len("Bearer ") :] in MY_TOKENS
+        )
+    except (KeyError, AssertionError):
+        raise nope(
+            401,
+            "You can't read submissions without proper authentication for security reasons",
+        )
     return flask.send_from_directory(SUBMISSION_PATH, fn)
 
 
 @app.route("/sjdb/rs", methods=["GET"])
 def sjdb_rs_dir() -> response_t:
-    auth = flask.request.authorization
-    if not auth or auth.type != "bearer" or (auth.token not in MY_TOKENS):
-        raise nope(403, "You can't list submissions without proper authentication for security reasons")
+    try:
+        auth = flask.request.headers["Authorization"]
+        assert (
+            auth and auth.startswith("Bearer ") and auth[len("Bearer ") :] in MY_TOKENS
+        )
+    except (KeyError, AssertionError):
+        raise nope(
+            401,
+            "You can't list submissions without proper authentication for security reasons",
+        )
     return flask.Response(
         json.dumps(os.listdir(SUBMISSION_PATH), indent="\t"),
         mimetype="application/json",
@@ -238,8 +257,7 @@ def sjdb_submit(context) -> response_t:
             text = flask.request.form["text"]
         except KeyError as e:
             raise nope(
-                400,
-                'Your request does not contain the required field "%s"' % e.args[0]
+                400, 'Your request does not contain the required field "%s"' % e.args[0]
             )
         if anon == "yes":
             uname = display_name
@@ -251,7 +269,7 @@ def sjdb_submit(context) -> response_t:
             raise nope(
                 400,
                 '"%s" is not an acceptable value for the "anon" field in the submit form. It should be "yes", "no", or "axolotl".'
-                % anon
+                % anon,
             )
         if "file" in flask.request.files and flask.request.files["file"].filename:
             if shutil.disk_usage(UPLOAD_PATH).free < 5 * (1024**3):
