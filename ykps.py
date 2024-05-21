@@ -68,9 +68,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 @app.errorhandler(Exception)
 def error(
-    exc,
-    msg="This error is really unexpected in the sense that no specific error handlers were set up to display this:",
-):
+    exc: BaseException,
+    msg: str = "This error is really unexpected in the sense that no specific error handlers were set up to display this:",
+) -> response_t:
     tb = "".join(traceback.format_exception(exc, chain=True))
     return flask.Response(
         flask.render_template(
@@ -83,9 +83,9 @@ def error(
 
 
 def teapot(
-    exc,
-    msg="This interface was called with the teapot but no specific message was specified.",
-):
+    exc: BaseException,
+    msg: str = "This interface was called with the teapot but no specific message was specified.",
+) -> response_t:
     tb = "".join(traceback.format_exception(exc, chain=True))
     return flask.Response(
         flask.render_template(
@@ -98,7 +98,7 @@ def teapot(
 
 
 @app.errorhandler(404)
-def handle_404(exc):
+def handle_404(exc: BaseException) -> response_t:
     msg = "".join(traceback.format_exception(exc, chain=True))
     return flask.Response(
         flask.render_template(
