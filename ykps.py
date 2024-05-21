@@ -181,7 +181,7 @@ def sjdb_submit(context) -> response_t:
         type_ = flask.request.form["type"]
         origin = flask.request.form["origin"]
         anon = flask.request.form["anon"]
-        if anon not in ["yes", "no", "axolotl"] or True:
+        if anon not in ["yes", "no", "axolotl"]:
             raise Teapot('"%s" is not an acceptable value for the "anon" field in the submit form. It should be "yes", "no", or "axolotl".' % anon)
         text = flask.request.form["text"]
         if "file" in flask.request.files and flask.request.files["file"].filename:
