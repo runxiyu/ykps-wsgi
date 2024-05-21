@@ -15,6 +15,7 @@ import json
 import sys
 import traceback
 import pathlib
+import tempfile
 
 import flask
 import werkzeug
@@ -125,7 +126,7 @@ def version() -> response_t:
 @app.route("/uinfo", methods=["GET"])
 @auth.login_required  # type: ignore
 def uinfo(context) -> response_t:
-    return flask.Response(json.dumps(context), mimetype="application/json")
+    return flask.Response(json.dumps(context, indent="\t"), mimetype="application/json")
 
 
 # @app.route("/login", methods=["GET"])
@@ -186,16 +187,29 @@ def sjdb_submit(context) -> response_t:
         text = flask.request.form["text"]
         if "file" in flask.request.files and flask.request.files["file"].filename:
             file = flask.request.files["file"]
-            if not file.filename: raise TypeError("I didn't think it's possible for the filename to suddenly become None again!!!")
-            fn = os.path.join(SAVE_PATH, os.path.basename(file.filename))
-            file.save(fn)
+            if not file.filename:
+                raise TypeError(
+                    "I didn't think it's possible for the filename to suddenly become None again!!!"
+                )
+            fnr, fne = os.path.splitext(os.path.basename(file.filename))
+            with tempfile.NamedTemporaryFile(
+                mode="w+b",
+                suffix=fne,
+                prefix=fnr + ".",
+                dir=SAVE_PATH,
+                delete=False,
+                delete_on_close=False,
+            ) as fd:
+                fn = fd.name
+                file.save(fd)
         else:
             file = None
             fn = None
         jd = json.dumps(
-            {"type": type_, "origin": origin, "anon": anon, "text": text, "file": fn}
+            {"type": type_, "origin": origin, "anon": anon, "text": text, "file": fn},
+            indent="\t",
         )
-        return flask.Response(jd, mimetype="text/plain", status=NOT_IMPLEMENTED)
+        return flask.Response(jd, mimetype="application/json", status=NOT_IMPLEMENTED)
         # return flask.render_template("sjdb-submit-post.html")
 
 
