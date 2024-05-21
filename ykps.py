@@ -14,6 +14,7 @@ import os
 import json
 import sys
 import traceback
+import pathlib
 
 import flask
 import werkzeug
@@ -38,24 +39,19 @@ CLIENT_ID = "651eef7e-8670-4b68-b7ed-d2d7885187e4"
 SCOPE = ["https://graph.microsoft.com/.default"]
 if ENV.upper() == "DEVELOPMENT":
     REDIRECT_URL = "http://localhost:8080/auth"
+    with open("secret.txt", "r") as fd:
+        CLIENT_SECRET = fd.read().strip("\n")
+    SAVE_PATH = "/tmp/uploads"
+    pathlib.Path(SAVE_PATH).mkdir(exist_ok=True)
 else:
     REDIRECT_URL = "https://ykps.runxiyu.org/auth"
+    with open("/srv/ykps/secret.txt", "r") as fd:
+        CLIENT_SECRET = fd.read().strip("\n")
+    SAVE_PATH = "/srv/ykps/uploads"
 
-for fn in ["/srv/ykps/secret.txt", "secret.txt"]:
-    try:
-        with open(fn, "r") as fd:
-            CLIENT_SECRET = fd.read().strip("\n")
-        break
-    except FileNotFoundError:
-        pass
-else:
-    raise FileNotFoundError("secret.txt")
-# with open("thumb.txt", "r") as fd:
-#     THUMBPRINT = fd.read().strip("\n")
-# with open("server.pem", "r") as fd:
-#     PRIVATE_KEY = fd.read()
 
-class Teapot(Exception): pass
+class Teapot(Exception):
+    pass
 
 
 app = flask.Flask(__name__)
@@ -150,6 +146,7 @@ def error_test() -> response_t:
 def teapot_test() -> response_t:
     raise Teapot("TEAPOTS!")
 
+
 @app.route("/sjdb/", methods=["GET"])
 def sjdb_index() -> response_t:
     return flask.render_template("sjdb-index.html")
@@ -182,14 +179,21 @@ def sjdb_submit(context) -> response_t:
         origin = flask.request.form["origin"]
         anon = flask.request.form["anon"]
         if anon not in ["yes", "no", "axolotl"]:
-            raise Teapot('"%s" is not an acceptable value for the "anon" field in the submit form. It should be "yes", "no", or "axolotl".' % anon)
+            raise Teapot(
+                '"%s" is not an acceptable value for the "anon" field in the submit form. It should be "yes", "no", or "axolotl".'
+                % anon
+            )
         text = flask.request.form["text"]
         if "file" in flask.request.files and flask.request.files["file"].filename:
             file = flask.request.files["file"]
+            if not file.filename: raise TypeError("I didn't think it's possible for the filename to suddenly become None again!!!")
+            fn = os.path.join(SAVE_PATH, os.path.basename(file.filename))
+            file.save(fn)
         else:
             file = None
+            fn = None
         jd = json.dumps(
-            {"type": type_, "origin": origin, "anon": anon, "text": text, "file": file}
+            {"type": type_, "origin": origin, "anon": anon, "text": text, "file": fn}
         )
         return flask.Response(jd, mimetype="text/plain", status=NOT_IMPLEMENTED)
         # return flask.render_template("sjdb-submit-post.html")
