@@ -268,7 +268,6 @@ def sjdb_submit(context) -> response_t:
                 data = {
                     "type": type_,
                     "origin": origin,
-                    "anon": anon,
                     "uname": uname,
                     "text": text,
                     "file": fn,
@@ -294,7 +293,6 @@ def sjdb_submit(context) -> response_t:
                 data = {
                     "type": type_,
                     "origin": origin,
-                    "anon": anon,
                     "uname": uname,
                     "text": text,
                     "file": fn,
