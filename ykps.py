@@ -126,7 +126,7 @@ def handle_413(exc: BaseException) -> response_t:
             % MAX_REQUEST_SIZE,
             error=tb,
         ),
-        status=418,
+        status=413,
     )
 
 
@@ -171,7 +171,7 @@ def error_test() -> response_t:
 
 @app.route("/nope", methods=["GET"])
 def nope_test() -> response_t:
-    raise nope(418, "Haha!")
+    raise nope(418, "Just ignore this error and get off this URL.")
 
 
 @app.route("/sjdb/", methods=["GET"])
@@ -361,6 +361,11 @@ def sjdb_submit(context) -> response_t:
             mimetype="application/json",
             status=NOT_IMPLEMENTED,
         )
+
+
+@app.route("/sjdb/unsub", methods=["GET"])
+def unsub() -> response_t:
+    raise nope(501, "Unsubscribing is not implemented yet. Email sjdb@runxiyu.org")
 
 
 if __name__ == "__main__":
