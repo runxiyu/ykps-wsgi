@@ -324,7 +324,7 @@ def sjdb_submit(context) -> response_t:
                     "uname": uname,
                     "ts": ts,
                     "text": text,
-                    "file": fn,
+                    "file": os.path.basename(fn) if fn else None,
                     "sub": fdjn,
                 }
                 json.dump(
@@ -348,7 +348,7 @@ def sjdb_submit(context) -> response_t:
                     "uname": uname,
                     "ts": ts,
                     "text": text,
-                    "file": fn,
+                    "file": os.path.basename(fn) if fn else None,
                     "sub": fdjn,
                 }
                 json.dump(
