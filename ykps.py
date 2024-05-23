@@ -63,10 +63,6 @@ class nope(Exception):
     pass
 
 
-class RunxiError(Exception):
-    pass
-
-
 app = flask.Flask(__name__)
 app.wsgi_app = werkzeug.middleware.proxy_fix.ProxyFix(  # type: ignore
     app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
@@ -276,7 +272,10 @@ def sjdb_submit(context) -> response_t:
             )
         if "file" in flask.request.files and flask.request.files["file"].filename:
             if shutil.disk_usage(UPLOAD_PATH).free < 5 * (1024**3):
-                raise RunxiError("Not enough disk space")
+                raise nope(
+                    507,
+                    "Unfortunately, I don't have enough disk space to fulfill this request. There is something funny going on with the server; please notify the administrator!",
+                )
             file = flask.request.files["file"]
             if not file.filename:
                 raise TypeError(
