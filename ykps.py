@@ -141,7 +141,7 @@ auth = identity.flask.Auth(
 
 @app.route("/", methods=["GET"])
 def index() -> response_t:
-    return flask.render_template("index.html")
+    return flask.Response(flask.render_template("index.html"), status=200)
 
 
 @app.route("/version", methods=["GET"])
@@ -176,17 +176,17 @@ def nope_test() -> response_t:
 
 @app.route("/sjdb/", methods=["GET"])
 def sjdb_index() -> response_t:
-    return flask.render_template("sjdb-index.html")
+    return flask.Response(flask.render_template("sjdb-index.html"), status=200)
 
 
 @app.route("/sjdb/about", methods=["GET"])
 def sjdb_about() -> response_t:
-    return flask.render_template("sjdb-about.html")
+    return flask.Response(flask.render_template("sjdb-about.html"), status=200)
 
 
 @app.route("/sjdb/acks", methods=["GET"])
 def sjdb_ack() -> response_t:
-    return flask.render_template("sjdb-acks.html")
+    return flask.Response(flask.render_template("sjdb-acks.html"), status=200)
 
 
 @app.route("/sjdb/rf/<fn>", methods=["GET"])
@@ -242,11 +242,14 @@ def sjdb_rs_dir() -> response_t:
 def sjdb_submit(context) -> response_t:
     display_name = context["user"]["name"]
     if flask.request.method == "GET":
-        return flask.render_template(
-            "sjdb-submit.html",
-            max_request_size=MAX_REQUEST_SIZE,
-            max_file_size=MAX_FILE_SIZE,
-            display_name=display_name,
+        return flask.Response(
+            flask.render_template(
+                "sjdb-submit.html",
+                max_request_size=MAX_REQUEST_SIZE,
+                max_file_size=MAX_FILE_SIZE,
+                display_name=display_name,
+            ),
+            status=200,
         )
     elif flask.request.method == "POST":
         # NOTE: Do not place duplicate keys in the form! The conversion will only yield the first one.
@@ -359,7 +362,7 @@ def sjdb_submit(context) -> response_t:
         return flask.Response(
             json.dumps(data, indent="\t"),
             mimetype="application/json",
-            status=NOT_IMPLEMENTED,
+            status=201,
         )
 
 
