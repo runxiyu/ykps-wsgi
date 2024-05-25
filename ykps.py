@@ -308,7 +308,7 @@ def sjdb_submit(context) -> response_t:
             fn = None
         if not (text.strip() or fn):
             raise nope(400, "Your submission request is basically empty.")
-        ts = datetime.datetime.now(tz=zoneinfo.ZoneInfo("UTC")).strftime("%s.")
+        ts = datetime.datetime.now(tz=zoneinfo.ZoneInfo("UTC")).strftime("%s")
         if sys.version_info >= (3, 12):
             with tempfile.NamedTemporaryFile(
                 mode="w+",
