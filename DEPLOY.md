@@ -5,7 +5,7 @@ My standard setup uses the [gunicorn](https://gunicorn.org) WSGI server under a 
 `/etc/systemd/system/ykps-watcher.path`
 ```ini
 [Path]
-PathModified=/srv/ykps/ykps/ykps.py
+PathModified=/srv/git/ykps/current/ykps-wsgi.git/index.lock
 
 [Install]
 WantedBy=multi-user.target
