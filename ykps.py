@@ -50,7 +50,8 @@ if ENV.upper() == "DEVELOPMENT":
     with open("tokens.txt", "r") as fd:
         MY_TOKENS = [l.strip("\n") for l in fd if l]
 else:
-    REDIRECT_URL = "https://ykps.runxiyu.org/auth"
+    # REDIRECT_URL = "https://ykps.runxiyu.org/auth"
+    REDIRECT_URL = "https://sj.ykps.net/auth"
     with open("/srv/ykps/secret.txt", "r") as fd:
         CLIENT_SECRET = fd.read().strip("\n")
     UPLOAD_PATH = "/srv/ykps/uploads"

@@ -1,9 +1,8 @@
 # Practical Utilities for YK Pao School
 
-- [Utilities WSGI Site](https://ykps.runxiyu.org)
-  [repo](https://git.sr.ht/~runxiyu/ykps-wsgi)
+- [Main site](https://sj.ykps.net/) ([backup](https://ykps.runxiyu.org)/[repo](https://git.sr.ht/~runxiyu/ykps-wsgi))
   [this README comes from here]
-- [Daily Bulletin](https://ykps.runxiyu.org/sjdb)
+- [Daily Bulletin](https://sj.ykps.net/sjdb) ([backup](https://ykps.runxiyu.org/sjdb))
   - [Build System](https://git.sr.ht/~runxiyu/sjdb-src)
   - [Built Files](https://git.sr.ht/~runxiyu/sjdb-build)
   - [Legacy](https://git.runxiyu.org/ykps/current/sjdb-legacy.git)

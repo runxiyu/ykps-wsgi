@@ -68,6 +68,7 @@ WantedBy=sockets.target
 ```ini
 server {
     server_name ykps.runxiyu.org;
+    server_name sj.ykps.net;
     location / {
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
