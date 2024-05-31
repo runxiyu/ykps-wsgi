@@ -283,82 +283,44 @@ def sjdb_submit(context) -> response_t:
                     "I didn't think it's possible for the filename to suddenly become None again!!!"
                 )
             fnr, fne = os.path.splitext(os.path.basename(file.filename))
-            if sys.version_info >= (3, 12):
-                with tempfile.NamedTemporaryFile(
-                    mode="w+b",
-                    suffix=fne,
-                    prefix=fnr + ".",
-                    dir=UPLOAD_PATH,
-                    delete=False,
-                    delete_on_close=False,
-                ) as fdf:
-                    fn = fdf.name
-                    file.save(fdf)
-            else:
-                with tempfile.NamedTemporaryFile(
-                    mode="w+b",
-                    suffix=fne,
-                    prefix=fnr + ".",
-                    dir=UPLOAD_PATH,
-                    delete=False,
-                ) as fdf:
-                    fn = fdf.name
-                    file.save(fdf)
+            with tempfile.NamedTemporaryFile(
+                mode="w+b",
+                suffix=fne,
+                prefix=fnr + ".",
+                dir=UPLOAD_PATH,
+                delete=False,
+            ) as fdf:
+                fn = fdf.name
+                file.save(fdf)
         else:
             file = None
             fn = None
         if not (text.strip() or fn):
             raise nope(400, "Your submission request is basically empty.")
         ts = datetime.datetime.now(tz=zoneinfo.ZoneInfo("UTC")).strftime("%s")
-        if sys.version_info >= (3, 12):
-            with tempfile.NamedTemporaryFile(
-                mode="w+",
-                suffix=".json",
-                prefix=ts,
-                dir=SUBMISSION_PATH,
-                delete=False,
-                delete_on_close=False,
-                encoding="utf-8",
-            ) as fdj:
-                fdjn = fdj.name
-                data = {
-                    "type": type_,
-                    "origin": origin,
-                    "uname": uname,
-                    "ts": ts,
-                    "text": text,
-                    "file": os.path.basename(fn) if fn else None,
-                    "sub": os.path.basename(fdjn),
-                }
-                json.dump(
-                    data,
-                    fdj,
-                    indent="\t",
-                )
-        else:
-            with tempfile.NamedTemporaryFile(
-                mode="w+",
-                suffix=".json",
-                prefix=ts,
-                dir=SUBMISSION_PATH,
-                delete=False,
-                encoding="utf-8",
-            ) as fdj:
-                fdjn = fdj.name
-                data = {
-                    "type": type_,
-                    "origin": origin,
-                    "uname": uname,
-                    "ts": ts,
-                    "text": text,
-                    "file": os.path.basename(fn) if fn else None,
-                    "sub": os.path.basename(fdjn),
-                }
-                json.dump(
-                    data,
-                    fdj,
-                    indent="\t",
-                )
+        with tempfile.NamedTemporaryFile(
+            mode="w+",
+            suffix=".json",
+            prefix=ts,
+            dir=SUBMISSION_PATH,
+            delete=False,
+            encoding="utf-8",
+        ) as fdj:
+            fdjn = fdj.name
+            data = {
+                "type": type_,
+                "origin": origin,
+                "uname": uname,
+                "ts": ts,
+                "text": text,
+                "file": os.path.basename(fn) if fn else None,
+                "sub": os.path.basename(fdjn),
+            }
+            json.dump(
+                data,
+                fdj,
+                indent="\t",
+            )
         return flask.Response(
             json.dumps(data, indent="\t"),
             mimetype="application/json",
