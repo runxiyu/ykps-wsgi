@@ -2,6 +2,8 @@
 
 My standard setup uses the [gunicorn](https://gunicorn.org) WSGI server under a [NGINX](https://nginx.org) reverse proxy.
 
+I'd typically use the `gevent` worker as I need to handle a lot of concurrent requests.
+
 `/etc/systemd/system/ykps-watcher.path`
 ```ini
 [Path]
@@ -40,7 +42,7 @@ User=ykps
 Group=nogroup
 RuntimeDirectory=ykps
 WorkingDirectory=/srv/ykps/ykps
-ExecStart=/usr/bin/gunicorn ykps:app
+ExecStart=/usr/bin/gunicorn --workers 2 -k gevent ykps:app
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed
 TimeoutStopSec=5
