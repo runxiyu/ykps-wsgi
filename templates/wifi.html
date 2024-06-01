@@ -1,0 +1,75 @@
+{# SPDX-License-Identifier: CC-BY-SA-4.0 #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>STUWIRELESS</title>
+	<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+	<header>
+		<h1>STUWIRELESS</h1>
+	</header>
+	<article>
+		<p>
+		This article describes configuring the Songjiang Campus's student WiFi network, STUWIRELESS.
+		</p>
+		<section>
+			<h2>NetworkManager for Linux-based systems</h2>
+			<p></p>
+			<p>Add the following to <code>/etc/NetworkManager/system-connections/ykps.nmconnection</code></p>
+			<pre>[connection]
+id=YKPS                                   # Or any user-friendly name
+uuid=980c8380-18e5-4dca-b4ef-f8f8378e9994 # Just a random UUID
+type=wifi
+
+[wifi]
+mode=infrastructure
+ssid=STUWIRELESS
+
+[wifi-security]
+key-mgmt=wpa-eap
+
+[802-1x]
+# Technically it would be more secure against evil-twin attacks if we
+# pinned certificates but I don't want to bother getting a
+# certificate because our IT doesn't provide one.  Welp.
+anonymous-identity=student@ykpaoschool.cn # Don't change this
+eap=peap;
+identity=username                         # e.g. s22537
+password=password                         # Your school password
+phase1-auth-flags=32                      # Allow insecure TLS 1.0
+phase2-auth=mschapv2
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=default
+method=auto</pre>
+			<p>
+			Then you should be able to just reload the NetworkManager service, and connect with <code>nmcli connection up YKPS</code> or whatever utility your desktop environment provides.
+			</p>
+			<p>
+			You still need to use the network authentication portal. <a href="https://git.sr.ht/~runxiyu/tooch/blob/master/sjauth.py">A simple Python script</a> is available to automate this process that only depends on the <code>requests</code> library (which you probably have anyway); you may want to run this every 6 AM and at power-on if 6 AM was missed, for example, via <a href="https://manpages.debian.org/bookworm/anacron/anacron.8.en.html"><code>anacron(8)</code></a>.
+			</p>
+			<p>
+			If you wish to manually use <code>wpa_supplicant</code>, in additional to the "standard" configuration, you need to add <code>tls_disable_tlsv1_0=0</code> to the <code>phase1</code> flags. This corresponds to <code>phase1-auth-flags=32</code> in the NetworkManager configuration.
+			</p>
+		</section>
+		<section>
+			<h2>macOS</h2>
+			<p>
+			Connect to the "STUWIRELESS" network with your normal school credentials.
+			</p>
+			<p>
+			Every morning (after 6 AM), you must log in at the network captive portal at <a><code>https://sjauth.ykpaoschool.cn:444/</code></a>.
+			</p>
+		</section>
+	</article>
+	<footer>
+		<a href="{{ url_for("index") }}">Return to the index</a>
+	</footer>
+</body>
+</html>
