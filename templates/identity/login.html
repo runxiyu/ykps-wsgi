@@ -1,4 +1,5 @@
 <html lang="en">
+{#
 {% if user_code or reset_password_url %}
 <head>
 	<meta charset="UTF-8">
@@ -25,10 +26,11 @@
 	{% endif %}
 </body>
 {% else %}
+#}
 <!-- This shortcut reduces the need to customize this template -->
 <head>
 	<meta http-equiv='refresh' content='0; URL={{ auth_uri }}'>
 </head>
-{% endif %}
+{# {% endif %} #}
 </html>
 
