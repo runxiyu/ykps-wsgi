@@ -16,8 +16,11 @@
 		This article describes configuring the Songjiang Campus's student WiFi network, STUWIRELESS.
 		</p>
 		<section>
+			<h2>Talk to the IT</h2>
+			<p>If you have new devices, you must contact the IT and have them record your permanent MAC address and username. They will assign you a fixed IPv4 address on the DHCP server.</p>
+		</section>
+		<section>
 			<h2>NetworkManager for Linux-based systems</h2>
-			<p></p>
 			<p>Add the following to <code>/etc/NetworkManager/system-connections/ykps.nmconnection</code></p>
 			<pre>[connection]
 id=YKPS                                   # Or any user-friendly name
@@ -59,11 +62,29 @@ method=auto</pre>
 			<p>
 			If you wish to manually use <code>wpa_supplicant</code>, in additional to the "standard" configuration, you need to add <code>tls_disable_tlsv1_0=0</code> to the <code>phase1</code> flags. This corresponds to <code>phase1-auth-flags=32</code> in the NetworkManager configuration.
 			</p>
+			<p>
+			If you wish to use a static IP, replace the <code>[ipv4]</code> block with the following and modify <code>XXX</code> to fit your assigned IPv4 address:
+			</p>
+			<pre>[ipv4]
+address1=10.2.XXX.XXX/21,10.2.191.253
+dns=10.2.20.101;10.2.20.100;10.2.120.21;
+dns-search=ykpaoschool.cn;
+may-fail=false
+method=manual</pre>
 		</section>
 		<section>
 			<h2>macOS</h2>
 			<p>
 			Connect to the "STUWIRELESS" network with your normal school credentials.
+			</p>
+			<p>
+			Every morning (after 6 AM), you must log in at the network captive portal at <a href="https://sjauth.ykpaoschool.cn:444/"><code>https://sjauth.ykpaoschool.cn:444/</code></a>.
+			</p>
+		</section>
+		<section>
+			<h2>iPadOS</h2>
+			<p>
+			Be sure that "Private WLAN Address" is disabled in the "STUWIRELESS" network's properties. Then connect to the network with your normal school credentials.
 			</p>
 			<p>
 			Every morning (after 6 AM), you must log in at the network captive portal at <a href="https://sjauth.ykpaoschool.cn:444/"><code>https://sjauth.ykpaoschool.cn:444/</code></a>.
