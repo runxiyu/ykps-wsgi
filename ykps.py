@@ -84,7 +84,7 @@ app.config.update(
             "static_dir": "fbfp/static",
             "max_request_size": MAX_REQUEST_SIZE,
             "max_file_size": 3000000,
-            "upload_path": "uploads",
+            "upload_path": "/srv/ykps/uploads",
             "require_free_space": 3 * 1024 * 1024 * 1024,
             "version_info": "https://git.sr.ht/~runxiyu/fbfp",
         },
