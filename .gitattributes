@@ -1,0 +1,3 @@
+# Not actually vendored but should be ignored
+*.html linguist-vendored
+*.css linguist-vendored
