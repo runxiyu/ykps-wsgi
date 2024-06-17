@@ -92,7 +92,7 @@ app.config.update(
         "SESSION_COOKIE_HTTPONLY": True,
         "SESSION_COOKIE_SECURE": True,
         "SESSION_COOKIE_SAMESITE": "Lax",
-        "USE_X_SENDFILE": True,
+        "USE_X_SENDFILE": False,  # broken
     }
 )
 
