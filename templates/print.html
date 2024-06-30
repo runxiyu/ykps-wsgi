@@ -1,0 +1,44 @@
+{# SPDX-License-Identifier: CC-BY-SA-4.0 #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Printer Settings at YK Pao School</title>
+	<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+	<header>
+		<h1>Printer Settings at YK Pao School</h1>
+	</header>
+	<article>
+		<section>
+			<h2>macOS</h2>
+			<ul>
+				<li>
+					Download the <a href="https://ykpaoschool-my.sharepoint.com/:f:/g/personal/s22537_ykpaoschool_cn/EpnGC3_pQ4VIsYQiaSGv6fABZVV5yVZUuYmwTyQHU0azfg?e=u9eG0z">driver DMG</a>
+				</li>
+				<li>
+					Add a printer with the following settings:
+					<ul>
+						<li>Protocol: LPD</li>
+						<li>IP: <code>10.2.170.20</code></li>
+						<li>Queue: <code>sjbw</code></li>
+						<li>Driver: </li>
+					</ul>
+				</li>
+			</ul>
+			<h2>Other UNIX-like systems</h2>
+			<p>
+			I haven't figured this out yet, and I don't have the time to reverse-engineer a giant driver. Simply copying the PPD file from the drivers provided by xerox into CUPS doesn't work.
+			</p>
+			<p>
+			You could either try reverse engineering the driver yourself, dig deeper on the Internet, or perhaps just set up a print server or a macOS virtual machine.
+			</p>
+		</section>
+	</article>
+	<footer>
+		<a href="{{ url_for("index") }}">Return to the index</a>
+	</footer>
+</body>
+</html>
