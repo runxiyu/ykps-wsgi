@@ -14,20 +14,79 @@
 	<article>
 		<section>
 			<h2>macOS</h2>
-			<ul>
+			<ol>
 				<li>
-					Download the <a href="https://ykpaoschool-my.sharepoint.com/:f:/g/personal/s22537_ykpaoschool_cn/EpnGC3_pQ4VIsYQiaSGv6fABZVV5yVZUuYmwTyQHU0azfg?e=u9eG0z">driver DMG</a>
+					Download the <a href="https://ykpaoschool-my.sharepoint.com/:f:/g/personal/s22537_ykpaoschool_cn/EpnGC3_pQ4VIsYQiaSGv6fABZVV5yVZUuYmwTyQHU0azfg?e=u9eG0z">driver DMG</a> and install it
 				</li>
 				<li>
-					Add a printer with the following settings:
-					<ul>
+					Add a printer with the following settings in the "IP" tab:
+					<ol>
 						<li>Protocol: LPD</li>
-						<li>IP: <code>10.2.170.20</code></li>
+						<li>Address: <code>10.2.20.170</code></li>
 						<li>Queue: <code>sjbw</code></li>
-						<li>Driver: </li>
-					</ul>
+						<li>Name: Songjiang</li>
+						<li>Driver: Click "Select Software". Most would work. I personally prefer "Fuji Xerox D95 v3018.103 PS", but you should probably use "FX ApeosPort-VI C3370 v3018.103 PS".</li>
+					</ol>
 				</li>
-			</ul>
+				<li>
+					Set your default options.
+					<ol>
+						<li>
+						Please try to use double-sided printing when appropriate.
+						</li>
+						<li>
+						Select a finisher type such as "C3", "D", or "A"-something. Those allow you to ask the printer to staple your documents.
+						</li>
+					</ol>
+				</li>
+				<li>
+					Press print on a test page from the system print dialog. You must use the system print dialog; for example, print from Preview.app rather than Adobe Acrobat. But don't submit the print job yet.
+				</li>
+				<li>
+					Configure the printing dialogue.
+					<ol>
+						<li>
+						Choose the correct printer, e.g. "Songjiang".
+						</li>
+						<li>
+						Expand "Printer Options".
+						</li>
+						<li>
+						Select "Job Accounting".
+						</li>
+						<li>
+						Select "User Details Setup".
+						</li>
+						<li>
+						Choose "Always Use Default User Details".
+						</li>
+						<li>
+						Choose "Enter Owner Name" in the "Specify Job Owner Name" dropdown box.
+						</li>
+						<li>
+						Enter your student ID (e.g. <code>s65535</code>) as the "User ID", and your student password as the "Passcode". Leave "Account ID" blank.
+						</li>
+						<li>
+						Press "OK" twice (until you return to the main print dialog).
+						</li>
+						<li>
+						Click whatever is to the right side of "Presets". It might say "Default Settings".
+						</li>
+						<li>
+						Click "Save Current Settings as Preset".
+						</li>
+						<li>
+						Enter a name like "Songjiang Preset". Make sure that the preset is set to be available for the "Songjiang" printer, and that you are saving a "Print Job Preset".
+						</li>
+						<li>
+						Press "OK".
+						</li>
+						<li>
+						Press "Print".
+						</li>
+					</ol>
+				</li>
+			</ol>
 			<h2>Other UNIX-like systems</h2>
 			<p>
 			I haven't figured this out yet, and I don't have the time to reverse-engineer a giant driver. Simply copying the PPD file from the drivers provided by xerox into CUPS doesn't work.
