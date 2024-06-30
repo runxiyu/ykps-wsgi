@@ -170,6 +170,9 @@ def index() -> response_t:
 def wifi() -> response_t:
     return flask.Response(flask.render_template("wifi.html"), status=200)
 
+@app.route("/print", methods=["GET"])
+def print() -> response_t:
+    return flask.Response(flask.render_template("print.html"), status=200)
 
 @app.route("/version", methods=["GET"])
 def version() -> response_t:
