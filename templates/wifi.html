@@ -23,13 +23,17 @@
 			<h2>NetworkManager for Linux-based systems</h2>
 			<p>Add the following to <code>/etc/NetworkManager/system-connections/ykps.nmconnection</code></p>
 			<pre>[connection]
-id=YKPS                                   # Or any user-friendly name
-uuid=980c8380-18e5-4dca-b4ef-f8f8378e9994 # Just a random UUID
+id=YKPS
+# Any user-friendly name will do
+uuid=980c8380-18e5-4dca-b4ef-f8f8378e9994
+# Random UUID, just make sure it doesn't collide
 type=wifi
 
 [wifi]
-cloned-mac-address=permanent              # https://fedoraproject.org/wiki/Changes/StableSSIDMACAddress
-mac-address-randomization=1               # Apparently 1 = "never"
+cloned-mac-address=permanent              
+# https://fedoraproject.org/wiki/Changes/StableSSIDMACAddress
+mac-address-randomization=1
+# 1 = "never"
 mode=infrastructure
 ssid=STUWIRELESS
 
@@ -40,11 +44,15 @@ key-mgmt=wpa-eap
 # Technically it would be more secure against evil-twin attacks if we
 # pinned certificates but I don't want to bother getting a
 # certificate because our IT doesn't provide one.  Welp.
-anonymous-identity=student@ykpaoschool.cn # Don't change this
+anonymous-identity=student@ykpaoschool.cn
+# Don't change anonymous-identity
 eap=peap;
-identity=username                         # e.g. s22537
-password=password                         # Your school password
-phase1-auth-flags=32                      # Allow insecure TLS 1.0
+identity=username
+#   e.g. s22537
+password=password
+#   e.g. supersecretpassword
+phase1-auth-flags=32
+# Allow insecure TLS 1.0 (used by stuff like eduroam and STUWIRELESS)
 phase2-auth=mschapv2
 
 [ipv4]
