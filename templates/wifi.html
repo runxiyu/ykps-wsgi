@@ -68,9 +68,6 @@ method=auto</pre>
 			Then you should be able to just reload the NetworkManager service, and connect with <code>nmcli connection up YKPS</code> or whatever utility your desktop environment provides.
 			</p>
 			<p>
-			You still need to use the network authentication portal. <a href="https://git.sr.ht/~runxiyu/tooch/blob/master/sjauth.py">A simple Python script</a> is available to automate this process that only depends on the <code>requests</code> library (which you probably have anyway); you may want to run this every 6 AM and at power-on if 6 AM was missed, for example, via <a href="https://manpages.debian.org/bookworm/anacron/anacron.8.en.html"><code>anacron(8)</code></a>.
-			</p>
-			<p>
 			If you wish to manually use <code>wpa_supplicant</code>, in additional to the "standard" configuration, you need to add <code>tls_disable_tlsv1_0=0</code> to the <code>phase1</code> flags. This corresponds to <code>phase1-auth-flags=32</code> in the NetworkManager configuration.
 			</p>
 			<p>
@@ -82,6 +79,12 @@ dns=10.2.20.101;10.2.20.100;10.2.120.21;
 dns-search=ykpaoschool.cn;
 may-fail=false
 method=manual</pre>
+			<p>
+			You still need to use the network authentication portal. <a href="https://git.sr.ht/~runxiyu/tooch/tree/master/sjauth">A simple C program</a> is available to automate this process that only depends on <code>libcurl</code>; you may want to run this every 6 AM and at power-on if 6 AM was missed, for example, via <a href="https://manpages.debian.org/bookworm/anacron/anacron.8.en.html"><code>anacron(8)</code></a>.
+			</p>
+			<p>
+			Note that TCP and UDP port 53 (usually used for DNS) is unblocked at all times and can accept arbitrary traffic, which still works if it's past 22:30, or even if you're not logged in. Therefore, if you have a server in Mainland China that, for example, listens on port 53 for IPSec/L2TP/WireGuard/<a href="https://code.kryo.se/iodine/">iodine</a>, the network authentication portal and the night-time block can be bypassed entirely. (Doing so with a server outside of Mainland China will result in blockage.)
+			</p>
 		</section>
 		<section>
 			<h2>macOS</h2>
