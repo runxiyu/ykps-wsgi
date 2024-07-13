@@ -68,9 +68,6 @@ method=auto</pre>
 			Then you should be able to just reload the NetworkManager service, and connect with <code>nmcli connection up YKPS</code> or whatever utility your desktop environment provides.
 			</p>
 			<p>
-			If you wish to manually use <code>wpa_supplicant</code>, in additional to the "standard" configuration, you need to add <code>tls_disable_tlsv1_0=0</code> to the <code>phase1</code> flags. This corresponds to <code>phase1-auth-flags=32</code> in the NetworkManager configuration.
-			</p>
-			<p>
 			If you wish to use a static IP, replace the <code>[ipv4]</code> block with the following and modify <code>XXX</code> to fit your assigned IPv4 address:
 			</p>
 			<pre>[ipv4]
@@ -84,6 +81,15 @@ method=manual</pre>
 			</p>
 			<p>
 			Note that TCP and UDP port 53 (usually used for DNS) is unblocked at all times and can accept arbitrary traffic, which still works if it's past 22:30, or even if you're not logged in. Therefore, if you have a server in Mainland China that, for example, listens on port 53 for IPSec/L2TP/WireGuard/<a href="https://code.kryo.se/iodine/">iodine</a>, the network authentication portal and the night-time block can be bypassed entirely. (Doing so with a server outside of Mainland China will result in blockage.)
+			</p>
+		</section>
+		<section>
+			<h2><code>wpa_supplicant</code>/<code>iwd</code></h2>
+			<p>
+			If you wish to manually use <code>wpa_supplicant</code>, in additional to the "standard" configuration, you need to add <code>tls_disable_tlsv1_0=0</code> to the <code>phase1</code> flags. On most systems, <code>/usr/share/doc/wpa_supplicant/examples/wpa_supplicant.conf</code> is a well-documented example configuration file that should cover all your needs.
+			</p>
+			<p>
+			I do not personally use <code>iwd</code>, and I don't see an option to allow insecure versions of TLS from a quick skim of the man page. Please help document this, if possible.
 			</p>
 		</section>
 		<section>
