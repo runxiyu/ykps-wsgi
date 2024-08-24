@@ -95,7 +95,7 @@ method=manual</pre>
 		<section>
 			<h2>OpenBSD</h2>
 			<p>
-			OpenBSD's WiFi drivers do not directly support 802.1x (see, for example, <a href="https://man.openbsd.org/?query=wireless&apropos=1">bwfm(4)</a> for Apple Silicon systems). You need to use <code>wpa_supplicant</code>. The usual guidance on <a href="https://codeberg.org/OpenBSD/ports/raw/branch/master/security/wpa_supplicant/pkg/README">wpa_supplicant on OpenBSD</a> applies.
+			OpenBSD's WiFi drivers do not directly support 802.1x (see, for example, <a href="https://man.openbsd.org/bwfm.4">bwfm(4)</a> for Apple Silicon systems). You need to use <code>wpa_supplicant</code>. The usual guidance on <a href="https://codeberg.org/OpenBSD/ports/raw/branch/master/security/wpa_supplicant/pkg/README">wpa_supplicant on OpenBSD</a> applies.
 			</p>
 			<p>
 			Note that TLS v1.1 and earlier have been removed from LibreSSL; therefore you must use the <code>-openssl</code> variants of the <code>wpa_supplicant</code> package, and add the <code>phase1</code> flags as noted previously, along with <code>phase1="allow_unsafe_renegotiation=1"</code>.
