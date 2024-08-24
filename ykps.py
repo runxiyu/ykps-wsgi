@@ -31,7 +31,6 @@ sys.path.append("/srv/ykps/fbfp/")
 from fbfp import make_bp as make_fbfp
 from fbfp import fbfpc_init
 from fbfp import db as fbfp_db
-from fbfp import nope
 
 response_t: typing.TypeAlias = typing.Union[werkzeug.Response, flask.Response, str]
 
@@ -66,6 +65,10 @@ else:
     SUBMISSION_PATH = "/srv/ykps/submissions"
     with open("/srv/ykps/tokens.txt", "r") as fd:
         MY_TOKENS = [l.strip("\n") for l in fd if l]
+
+
+class nope(Exception):
+    pass
 
 
 app = flask.Flask(__name__)
