@@ -21,16 +21,9 @@ import datetime
 import zoneinfo
 
 import flask
-import jinja2
 import werkzeug
 import werkzeug.middleware.proxy_fix
 import identity.flask  # type: ignore
-
-sys.path.append("/srv/ykps/fbfp/")
-
-from fbfp import make_bp as make_fbfp
-from fbfp import fbfpc_init
-from fbfp import db as fbfp_db
 
 response_t: typing.TypeAlias = typing.Union[werkzeug.Response, flask.Response, str]
 
@@ -80,22 +73,10 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 app.config.update(
     {
-        "SQLALCHEMY_DATABASE_URI": "mariadb+mariadbconnector://fbfp:%s@localhost/fbfp?unix_socket=/var/lib/mysql/mysql.sock"
-        % open("/srv/ykps/mariadb.txt").read().strip("\n"),
-        "FBFPC": {
-            "site_title": "EXPERIMENTAL FBFP",
-            "static_dir": "fbfp/static",
-            "max_request_size": MAX_REQUEST_SIZE,
-            "max_file_size": 3000000,
-            "upload_path": "uploads",
-            "require_free_space": 3 * 1024 * 1024 * 1024,
-            "version_info": "https://git.sr.ht/~runxiyu/fbfp",
-        },
         "SECRET_KEY": open("/srv/ykps/secret-key.txt").read().strip("\n"),
         "SESSION_COOKIE_HTTPONLY": True,
         "SESSION_COOKIE_SECURE": True,
         "SESSION_COOKIE_SAMESITE": "Lax",
-        "USE_X_SENDFILE": False,  # broken
     }
 )
 
@@ -173,9 +154,11 @@ def index() -> response_t:
 def wifi() -> response_t:
     return flask.Response(flask.render_template("wifi.html"), status=200)
 
+
 @app.route("/print", methods=["GET"])
 def print() -> response_t:
     return flask.Response(flask.render_template("print.html"), status=200)
+
 
 @app.route("/version", methods=["GET"])
 def version() -> response_t:
@@ -368,13 +351,6 @@ def sjdb_submit(context) -> response_t:
 def unsub() -> response_t:
     raise nope(501, "Unsubscribing is not implemented yet. Email sjdb@runxiyu.org")
 
-
-fbfpc_init(app)
-app.register_blueprint(make_fbfp(auth.login_required), url_prefix="/fbfp/")
-app.jinja_env.undefined = jinja2.StrictUndefined
-app.jinja_env.trim_blocks = True
-app.jinja_env.lstrip_blocks = True
-fbfp_db.init_app(app)
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
