@@ -349,7 +349,7 @@ def sjdb_submit(context) -> response_t:
 
 @app.route("/sjdb/unsub", methods=["GET"])
 def unsub() -> response_t:
-    raise nope(501, "Unsubscribing is not implemented yet. Email sjdb@runxiyu.org")
+    raise nope(501, "Unsubscribing is not implemented yet. Just s22537@stu.ykpaoschool.cn for now. Sorry!")
 
 
 if __name__ == "__main__":
